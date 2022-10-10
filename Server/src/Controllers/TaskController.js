@@ -1,6 +1,13 @@
-export const getTasks = (req, res) => {
+import Tasks from "../models/TasksModel";
+
+export const getTasks = async (req, res) => {
   try {
-    res.status(200).json("Tasks found");
+    const tasks = await Tasks.findAll({ raw: true });
+    console.log("====================================");
+    console.log(tasks);
+    console.log("====================================");
+
+    res.status(200).json(tasks);
   } catch (err) {
     res.status(404).json("Tasks not Found");
   }
