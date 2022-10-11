@@ -11,14 +11,12 @@ export const getTasks = async (req, res) => {
 
 export const updateTasks = async (req, res) => {
   const id = req.params.id;
-
   try {
     const task = await Tasks.findOne({ where: { id: id } });
-
     if (task) {
       const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
       await Tasks.update({ taskName, priority, deadlineDate, starts, ends, is_deleted }, { where: { id: id } });
-      res.status(200).json([req.body]);
+      res.status(200).json(Tasks);
     } else {
       res.status(200).json("task does not exist");
     }
