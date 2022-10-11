@@ -1,14 +1,14 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/Database";
 
-const { TEXT, INTEGER, DATE, TIME, BOOLEAN } = DataTypes;
+const { TEXT, STRING, DATEONLY, TIME, BOOLEAN } = DataTypes;
 
 const Tasks = sequelize.define(
   "ToDo_Tasks",
   {
     taskName: TEXT,
-    priority: INTEGER,
-    deadlineDate: DATE,
+    priority: STRING,
+    deadlineDate: DATEONLY,
     starts: TIME,
     ends: TIME,
     is_deleted: BOOLEAN,
