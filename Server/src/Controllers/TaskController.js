@@ -9,16 +9,30 @@ export const getTasks = async (req, res) => {
   }
 };
 
+export const updateTasks = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const task = await Tasks.findOne({ where: { id: id } });
+
+    if (task) {
+      const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
+      await Tasks.update({ taskName, priority, deadlineDate, starts, ends, is_deleted }, { where: { id: id } });
+      res.status(200).json([req.body]);
+    } else {
+      res.status(200).json("task does not exist");
+    }
+    return;
+  } catch (err) {
+    res.status(404).json("Tasks not Found");
+  }
+};
+
 export const postTasks = async (req, res) => {
   try {
-    console.log("====================================");
-    console.log(req.body);
-    console.log("====================================");
     const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
+
     await Tasks.create({ taskName, priority, deadlineDate, starts, ends, is_deleted });
-    console.log("====================================");
-    console.log("Task created : ");
-    console.log("====================================");
     res.status(201).json("task is created");
     return;
   } catch (err) {
