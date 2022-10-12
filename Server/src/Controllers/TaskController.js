@@ -21,6 +21,29 @@ export const updateTrash = async (req, res) => {
     res.status(404).json("Trash not Found");
   }
 };
+export const redo = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const task = await Tasks.findOne({ where: { id: id } });
+    if (task) {
+      const updated = await Tasks.update({ is_deleted: "FALSE" }, { where: { id: id } });
+      console.log("====================================");
+      console.log("updated", updated);
+      console.log("====================================");
+
+      const tasks = await Tasks.findAll({ where: { is_deleted: "TRUE" } }, { raw: true });
+      console.log("====================================");
+      console.log(tasks);
+      console.log("====================================");
+      res.status(200).json(tasks);
+    } else {
+      res.status(200).json([]);
+    }
+    return;
+  } catch (err) {
+    res.status(404).json(err);
+  }
+};
 export const deleteParmanent = async (req, res) => {
   const id = req.params.id;
   try {
