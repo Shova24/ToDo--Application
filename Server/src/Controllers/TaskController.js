@@ -59,21 +59,14 @@ export const deleteParmanent = async (req, res) => {
 export const updateTasks = async (req, res) => {
   try {
     const id = req.params.id;
-    const task = await Tasks.findOne({ where: { id: id } });
-    if (task) {
-      const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
-      await Tasks.update({ taskName, priority, deadlineDate, starts, ends, is_deleted }, { where: { id: id } });
-      // const tasks = Tasks.findAll({ raw: true });
-      // console.log("====================================");
-      // console.log(task);
-      // console.log("====================================");
-      const updatedTask = await Tasks.findOne({ where: { id: id } });
-      res.status(200).json(updatedTask);
-    } else {
-      res.status(200).json({});
-    }
-    return;
+    console.log("GGWP", req.body);
+    const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
+    await Tasks.update({ taskName, priority, deadlineDate, starts, ends, is_deleted }, { where: { id: id } });
+    const tasks = await Tasks.findAll({ where: { is_deleted: false }, raw: true });
+    // const task = await Tasks.findOne({ where: { id: id }, raw: true });
+    res.status(200).json(tasks);
   } catch (err) {
+    console.log("can not update tasks", err);
     res.status(404).json([]);
   }
 };
