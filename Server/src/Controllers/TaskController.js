@@ -9,6 +9,7 @@ export const getTasks = async (req, res) => {
   }
 };
 
+//delete from task list
 export const updateTrash = async (req, res) => {
   try {
     const id = req.params.id;
@@ -16,7 +17,7 @@ export const updateTrash = async (req, res) => {
     console.log("====================================");
     console.log(req.body);
     console.log("====================================");
-    res.status(200).json([req.body]);
+    res.status(200).json(req.body);
   } catch (err) {
     res.status(404).json("Trash not Found");
   }
@@ -27,8 +28,9 @@ export const redo = async (req, res) => {
     const task = await Tasks.findOne({ where: { id: id } });
     if (task) {
       await Tasks.update({ is_deleted: "FALSE" }, { where: { id: id } });
-      const tasks = await Tasks.findAll({ where: { is_deleted: "TRUE" } }, { raw: true });
-      res.status(200).json(tasks);
+      // const tasks = await Tasks.findAll({ where: { is_deleted: "TRUE" } }, { raw: true });
+      const task = await Tasks.findOne({ where: { id: id } });
+      res.status(200).json(task);
     } else {
       res.status(200).json([]);
     }
@@ -65,22 +67,28 @@ export const updateTasks = async (req, res) => {
       // console.log("====================================");
       // console.log(task);
       // console.log("====================================");
-      res.status(200).json([req.body]);
+      const updatedTask = await Tasks.findOne({ where: { id: id } });
+      res.status(200).json(updatedTask);
     } else {
-      res.status(200).json("task does not exist");
+      res.status(200).json({});
     }
     return;
   } catch (err) {
-    res.status(404).json("Tasks not Found");
+    res.status(404).json([]);
   }
 };
 
 export const postTasks = async (req, res) => {
   try {
     const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
+    const newTask = { taskName: taskName, priority: priority, deadlineDate: deadlineDate, starts: starts, ends: ends, is_deleted: is_deleted };
+    console.log("====================================");
+    console.log(newTask);
+    console.log("====================================");
 
-    await Tasks.create({ taskName, priority, deadlineDate, starts, ends, is_deleted });
-    res.status(201).json("task is created");
+    await Tasks.create(newTask);
+
+    res.status(201).json(newTask);
     return;
   } catch (err) {
     res.status(404).json("Post is not complete.");

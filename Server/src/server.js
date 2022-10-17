@@ -3,8 +3,8 @@ import sequelize from "../src/config/Database";
 const port = 5000;
 
 sequelize
-  // .sync()
-  .authenticate()
+  .sync()
+  // .authenticate()
   .then(() => {
     console.log("Connected to DB");
   })
