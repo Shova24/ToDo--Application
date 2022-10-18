@@ -59,7 +59,6 @@ export const deleteParmanent = async (req, res) => {
 export const updateTasks = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("GGWP", req.body);
     const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
     await Tasks.update({ taskName, priority, deadlineDate, starts, ends, is_deleted }, { where: { id: id } });
     const tasks = await Tasks.findAll({ where: { is_deleted: false }, raw: true });
@@ -75,13 +74,13 @@ export const postTasks = async (req, res) => {
   try {
     const { taskName, priority, deadlineDate, starts, ends, is_deleted } = req.body;
     const newTask = { taskName: taskName, priority: priority, deadlineDate: deadlineDate, starts: starts, ends: ends, is_deleted: is_deleted };
-    console.log("====================================");
-    console.log(newTask);
-    console.log("====================================");
-
     await Tasks.create(newTask);
+    const tasks = await Tasks.findAll({ raw: true });
+    console.log("====================================");
+    console.log("Tasks : ", tasks);
+    console.log("====================================");
 
-    res.status(201).json(newTask);
+    res.status(201).json(tasks);
     return;
   } catch (err) {
     res.status(404).json("Post is not complete.");
